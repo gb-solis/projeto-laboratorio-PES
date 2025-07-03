@@ -1,0 +1,6 @@
+# Especificação do formato `.tree` em BNF
+# v1.0 07/02/2025
+#
+<file> ::= <EOF> | <line> <file>
+<line> ::= <EOL> | <string literal> <line> | <link> <line>
+<link> ::= "[" <escaped string literal> "](" <natural number> ")"
