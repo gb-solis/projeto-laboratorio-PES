@@ -9,6 +9,25 @@ from tree import Tree
 copernicus_font = "C:/Users/Solis/Downloads/Labor and Wait Trial Fonts/Labor and Wait Trial Fonts/Copernicus Trial/CopernicusTrial-BookItalic.ttf"
 georgia_font = "C:/Windows/Fonts/Georgia.ttf"
 
+class TreeLayout(MDBoxLayout):
+    def __init__(self, tree, *args, **kwargs):
+        super().__init__(size_hint=(0.8, 0.8), pos_hint={"center_x": .5, "center_y": .5}, orientation='vertical')
+
+        self.tree = tree
+
+        self.titulo = Título('Photosynthesis')
+        self.add_widget(self.titulo)
+
+        self.stack = MDStackLayout(spacing=(0,10))
+        self.add_widget(self.stack)
+
+        for l in self.tree.leaves:
+            match l:
+                case str():
+                    self.stack.add_widget(Palavra(l))
+                case Tree():
+                    self.stack.add_widget(Link(l))
+
 class Título(MDLabel):
     def __init__(self, texto, *args, **kwargs):
         super().__init__(text=texto, *args, **kwargs)
@@ -56,18 +75,7 @@ class Link(MDButton):
 class TreeScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
         self.md_bg_color = self.theme_cls.surfaceColor
-        self.tree = Tree.parse('exemplo2.tree')
-        self.layout = MDBoxLayout(size_hint=(0.8, 0.8), pos_hint={"center_x": .5, "center_y": .5}, orientation='vertical')
+        tree = Tree.parse('exemplo2.tree')
+        self.layout = TreeLayout(tree)
         self.add_widget(self.layout)
-        self.layout.add_widget(Título('Photosynthesis'))
-        self.sublayout = MDStackLayout(spacing=(0,10))
-        self.layout.add_widget(self.sublayout)
-
-        for l in self.tree.leaves:
-            match l:
-                case str():
-                    self.sublayout.add_widget(Palavra(l))
-                case Tree():
-                    self.sublayout.add_widget(Link(l))
