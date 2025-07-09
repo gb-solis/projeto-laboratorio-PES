@@ -52,7 +52,7 @@ class Tree:
     @parse.register
     @classmethod
     def _(cls, path: str): # -> Tree
-        with open(path) as file:
+        with open(path, encoding='utf8') as file:
             lines = file.read().splitlines()
         tree = Tree.parse(lines)
         tree.expanded = True
