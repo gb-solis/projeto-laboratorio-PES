@@ -6,8 +6,10 @@ from kivymd.uix.button import MDButton, MDButtonText
 
 from tree import Tree
 
-copernicus_font = "C:/Users/Solis/Downloads/Labor and Wait Trial Fonts/Labor and Wait Trial Fonts/Copernicus Trial/CopernicusTrial-BookItalic.ttf"
-georgia_font = "C:/Windows/Fonts/Georgia.ttf"
+fonts = {
+    "copernicus": "fonts/CopernicusTrial-BookItalic.ttf",
+    "georgia": "fonts/Georgia.ttf",
+}
 
 class TreeLayout(MDBoxLayout):
     def __init__(self, tree, *args, **kwargs):
@@ -34,8 +36,7 @@ class Título(MDLabel):
         self.font_style = 'Body'
         self.halign = 'center'
         self.font_size = 60
-        self.font_name = copernicus_font
-
+        self.font_name = fonts["copernicus"]
 
 class Palavra(MDLabel):
     def __init__(self, texto, *args, **kwargs):
@@ -47,7 +48,7 @@ class Palavra(MDLabel):
         self.color = (0,0,0)
         self.padding_x = 5
         self.font_size = 24
-        self.font_name = georgia_font
+        self.font_name = fonts["georgia"]
         # self.md_bg_color = (1,0,0,0.1)
         self.radius = 15, 15
 

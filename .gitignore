@@ -1,3 +1,4 @@
 *.tree
 __pycache__/
 workingTrees/
+fonts/
