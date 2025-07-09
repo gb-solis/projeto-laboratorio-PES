@@ -1,5 +1,6 @@
 import re
 from typing import *
+from pathlib import Path
 from itertools import batched
 from functools import singledispatchmethod
 
@@ -54,7 +55,8 @@ class Tree:
     def _(cls, path: str): # -> Tree
         with open(path, encoding='utf8') as file:
             lines = file.read().splitlines()
-        tree = Tree.parse(lines)
+        title = Path(path).stem
+        tree = Tree.parse(lines, Tree(title))
         tree.expanded = True
         return tree
 
