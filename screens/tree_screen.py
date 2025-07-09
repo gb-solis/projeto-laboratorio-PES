@@ -1,38 +1,32 @@
-
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.stacklayout import MDStackLayout
 from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDButton, MDButtonText
+
 from tree import Tree
 
-class Palavra(MDLabel):
-    def __init__(self, palavra, *args, **kwargs):
-        texto = MDButtonText(text=palavra)
-        super().__init__(texto, *args, **kwargs)
-        self.texto = texto
-        self.style = "tonal" # "text"
-        self.pos_hint = {"center_x": 0, "center_y": .5}
-        self.radius = 0,0,0,0
-        #self.width = 0.5*self.width
-        #print(f'radius: {self.radius}')
-
+class Título(MDLabel):
     def __init__(self, texto, *args, **kwargs):
-        #texto = MDButtonText(text=palavra)
         super().__init__(text=texto, *args, **kwargs)
-        #self.texto = texto
-        #self.style = "tonal" # "text"
+        self.font_style = 'Body'
+        self.halign = 'center'
+        self.font_size = 60
+        self.font_name = "C:/Users/Solis/Downloads/Labor and Wait Trial Fonts/Labor and Wait Trial Fonts/Copernicus Trial/CopernicusTrial-BookItalic.ttf"
+
+class Palavra(MDLabel):
+    def __init__(self, texto, *args, **kwargs):
+        super().__init__(text=texto, *args, **kwargs)
         self.pos_hint = {"center_x": 0.5, "center_y": .5}
-        # self.adaptive_size = True
         self.adaptive_width = True
-        # self.size_hint_y = 0.2
         self.size_hint_y = None
         self.height = 50
         self.color = (0,0,0)
         self.padding_x = 5
-        #self.radius = 0,0,0,0
-        #self.width = 0.5*self.width
-        #print(f'radius: {self.radius}')
+        self.font_size = 24
+        self.font_name="C:/Windows/Fonts/Georgia.ttf"
+        # self.md_bg_color = (1,0,0,0.1)
+        self.radius = 15, 15
 
 class Link(MDButton):
     def __init__(self, tree, *args, **kwargs):
@@ -63,7 +57,7 @@ class TreeScreen(MDScreen):
         self.tree = Tree.parse('exemplo2.tree')
         self.layout = MDBoxLayout(size_hint=(0.8, 0.8), pos_hint={"center_x": .5, "center_y": .5}, orientation='vertical')
         self.add_widget(self.layout)
-        self.layout.add_widget(MDLabel(text='Photosynthesis', font_style='Display', halign='center'))
+        self.layout.add_widget(Título('Photosynthesis'))
         self.sublayout = MDStackLayout(spacing=(0,10))
         self.layout.add_widget(self.sublayout)
 
