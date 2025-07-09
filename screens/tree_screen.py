@@ -74,9 +74,9 @@ class Link(MDButton):
         self.parent.remove_widget(self)
 
 class TreeScreen(MDScreen):
-    def __init__(self, **kwargs):
+    def __init__(self, path, **kwargs):
         super().__init__(**kwargs)
         self.md_bg_color = self.theme_cls.surfaceColor
-        tree = Tree.parse('exemplo2.tree')
+        tree = Tree.parse(path)
         self.layout = TreeLayout(tree)
         self.add_widget(self.layout)
