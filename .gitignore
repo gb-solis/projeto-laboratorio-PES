@@ -1,1 +1,3 @@
 *.tree
+__pycache__/
+workingTrees/
