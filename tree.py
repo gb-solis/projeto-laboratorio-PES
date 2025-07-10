@@ -92,9 +92,9 @@ class Tree:
         for b in self.branches:
             match b:
                 case str():
-                    yield parent, b
+                    yield 0, parent, b
                 case Tree():
                     if b.expanded:
-                        yield from b.leaf_pairs
+                        yield from ((n+1,p,b) for n,p,b in b.leaf_pairs)
                     else:
-                        yield parent, b
+                        yield 0, parent, b

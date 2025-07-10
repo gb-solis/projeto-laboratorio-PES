@@ -55,13 +55,13 @@ class TreeLayout(MDBoxLayout):
         if clear:
             self.stack.clear_widgets()
 
-        for p,l in self.tree.leaf_pairs:
+        for n,p,l in self.tree.leaf_pairs:
             match l:
                 case str():
                     for l in l.split():
-                        self.stack.add_widget(Palavra(l, p))
+                        self.stack.add_widget(Palavra(l, p, level=n))
                 case Tree():
-                    self.stack.add_widget(Link(l, p))
+                    self.stack.add_widget(Link(l, p, level=n))
 
 class Título(MDLabel):
     def __init__(self, texto, *args, **kwargs):
@@ -98,9 +98,10 @@ class Fechável():
         self.parent.parent.typeset()
 
 class Palavra(Fechável, MDLabel):
-    def __init__(self, texto, pai, *args, **kwargs):
+    def __init__(self, texto, pai, level, *args, **kwargs):
         super().__init__(text=texto, *args, **kwargs)
         self.pai = pai
+        self.level = level
         self.pos_hint = {"center_x": 0.5, "center_y": .5}
         self.adaptive_width = True
         self.size_hint_y = None
@@ -109,17 +110,18 @@ class Palavra(Fechável, MDLabel):
         self.padding_x = 5
         self.font_size = 24
         self.font_name = fonts["minion rm"]
-        self.md_bg_color = (1, 0, 0, 0.05)
+        self.md_bg_color = (1, 0, 0, 1 - 0.97**(1.0*self.level + 1))
         self.radius = 15, 15
 
 class Link(Fechável, MDButton):
-    def __init__(self, tree, pai, *args, **kwargs):
+    def __init__(self, tree, pai, level, *args, **kwargs):
         texto = MDButtonText(text=tree.node, italic=True)
         texto.font_name = fonts['minion']
         texto.font_size = 24
         super().__init__(texto, *args, **kwargs)
         self.tree = tree
         self.pai = pai
+        self.level = level
         self.texto = texto
         self.style = "elevated"
         self.pos_hint = {"center_x": 0, "center_y": .5}
