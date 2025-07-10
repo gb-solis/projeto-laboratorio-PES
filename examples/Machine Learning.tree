@@ -1,0 +1,7 @@
+Machine learning is [a process](1) where computers [learn from data](2) to [perform tasks better.](3)
+a subfield of Artificial Intelligence (AI)
+identify patterns within [large datasets](2) using [statistical algorithms](3)
+improve their performance without being explicitly programmed
+large datasets, often referred to as 'training data'
+statistical algorithms, such as [supervised, unsupervised, and reinforcement learning](1)
+supervised learning (which uses labeled data), unsupervised learning (which finds hidden structures), and reinforcement learning (which learns via trial and error)
