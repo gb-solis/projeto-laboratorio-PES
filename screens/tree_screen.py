@@ -69,7 +69,7 @@ class Título(MDLabel):
         self.font_style = 'Body'
         self.halign = 'center'
         self.font_size = 60
-        self.font_name = fonts["times"]
+        self.font_name = fonts["antiqua"]
 
 class Fechável():
     def on_touch_down(self, touch):
