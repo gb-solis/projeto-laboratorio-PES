@@ -12,5 +12,9 @@ class MainApp(MDApp):
         return TreeScreen(self.path)
 
 if __name__=='__main__':
-    path = argv[1]
+    try:
+        path = argv[1]
+    except IndexError:
+        print("\nError: Missing  the *.tree source file.\nUsage: python main.py <source_file>\n")
+        exit()
     MainApp(path).run()
