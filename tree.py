@@ -85,3 +85,16 @@ class Tree:
                         yield from b.leaves
                     else:
                         yield b
+
+    @property
+    def leaf_pairs(self):
+        parent = self
+        for b in self.branches:
+            match b:
+                case str():
+                    yield parent, b
+                case Tree():
+                    if b.expanded:
+                        yield from b.leaf_pairs
+                    else:
+                        yield parent, b

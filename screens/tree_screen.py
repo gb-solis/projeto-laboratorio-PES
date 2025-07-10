@@ -5,7 +5,8 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.stacklayout import MDStackLayout
 from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDButton, MDButtonText, MDFabButton
-from kivymd.uix.dialog import MDDialog, MDDialogHeadlineText
+from kivymd.uix.divider import MDDivider
+from kivymd.uix.dialog import MDDialog, MDDialogHeadlineText, MDDialogSupportingText, MDDialogContentContainer, MDDialogButtonContainer, MDDialogIcon
 
 from tree import Tree
 
@@ -48,16 +49,19 @@ class TreeLayout(MDBoxLayout):
         self.stack = MDStackLayout(spacing=(0,10))
         self.add_widget(self.stack)
 
-        self.typeset()
-        
-    def typeset(self):
-        for l in self.tree.leaves:
+        self.typeset(clear=False)
+
+    def typeset(self, clear=True):
+        if clear:
+            self.stack.clear_widgets()
+
+        for p,l in self.tree.leaf_pairs:
             match l:
                 case str():
                     for l in l.split():
-                        self.stack.add_widget(Palavra(l))
+                        self.stack.add_widget(Palavra(l, p))
                 case Tree():
-                    self.stack.add_widget(Link(l))
+                    self.stack.add_widget(Link(l, p))
 
 class Título(MDLabel):
     def __init__(self, texto, *args, **kwargs):
@@ -68,9 +72,35 @@ class Título(MDLabel):
         self.font_size = 60
         self.font_name = fonts["times"]
 
-class Palavra(MDLabel):
-    def __init__(self, texto, *args, **kwargs):
+class Fechável():
+    def on_touch_down(self, touch):
+        if not self.collide_point(*touch.pos):
+            return False
+
+        if not touch.is_double_tap:
+            print("A")
+            if hasattr(self, 'on_press'):
+                print("B")
+                self.on_press()
+            return False
+
+        # if the touch collides with our widget, let's grab it
+        touch.grab(self)
+        print('okay')
+
+        self.fecha()
+
+        # and accept the touch.
+        return True
+
+    def fecha(self):
+        self.pai.expanded = False
+        self.parent.parent.typeset()
+
+class Palavra(Fechável, MDLabel):
+    def __init__(self, texto, pai, *args, **kwargs):
         super().__init__(text=texto, *args, **kwargs)
+        self.pai = pai
         self.pos_hint = {"center_x": 0.5, "center_y": .5}
         self.adaptive_width = True
         self.size_hint_y = None
@@ -82,23 +112,22 @@ class Palavra(MDLabel):
         self.md_bg_color = (1, 0, 0, 0.05)
         self.radius = 15, 15
 
-class Link(MDButton):
-    def __init__(self, tree, *args, **kwargs):
+class Link(Fechável, MDButton):
+    def __init__(self, tree, pai, *args, **kwargs):
         texto = MDButtonText(text=tree.node, italic=True)
         texto.font_name = fonts['minion']
         texto.font_size = 24
         super().__init__(texto, *args, **kwargs)
         self.tree = tree
+        self.pai = pai
         self.texto = texto
         self.style = "elevated"
         self.pos_hint = {"center_x": 0, "center_y": .5}
         self.on_press = self.abre
     
     def integra(self, *args, **kwargs):
-        parent = self.parent
         self.tree.expanded = True
-        parent.clear_widgets()
-        parent.parent.typeset()
+        self.parent.parent.typeset()
         self.dialog.dismiss()
 
     def abre(self):
