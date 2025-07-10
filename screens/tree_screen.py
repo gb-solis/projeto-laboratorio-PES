@@ -31,6 +31,20 @@ fonts = {
     "minion rm": "C:/Users/Solis/Downloads/MinionPro-Regular.otf", # *
 }
 
+show_colors = False
+auto_annex = False
+
+def toggle_colors(*args):
+    global show_colors
+    show_colors = not show_colors
+    args[0].parent.typeset()
+    args[0].style = "tonal" if show_colors else "standard"
+
+def toggle_annex(*args):
+    global auto_annex
+    auto_annex = not auto_annex
+    args[0].style = "tonal" if auto_annex else "standard"
+
 class TreeLayout(MDBoxLayout):
     def __init__(self, tree, *args, depth=1, **kwargs):
         super().__init__(
@@ -106,7 +120,7 @@ class Palavra(Fechável, MDLabel):
         self.padding_x = 5
         self.font_size = 24
         self.font_name = fonts["minion rm"]
-        self.md_bg_color = (1, 0, 0, 1 - 0.97**(1.0*self.level + 1))
+        self.md_bg_color = (1, 0, 0, 1 - 0.97**(1.0*self.level + 1)) if show_colors else (1, 0, 0, 0.03)
         self.radius = 15, 15
 
 class Link(Fechável, MDButton):
@@ -126,9 +140,13 @@ class Link(Fechável, MDButton):
     def integra(self, *args, **kwargs):
         self.tree.expanded = True
         self.parent.parent.typeset()
-        self.dialog.dismiss()
+        if hasattr(self, 'dialog') and self.dialog:
+            self.dialog.dismiss()
 
     def abre(self):
+        if auto_annex:
+            self.integra()
+            return
         t = TreeLayout(self.tree, depth=self.parent.parent.depth+1,)
         t.add_widget(MDFabButton(icon='pencil-outline', pos_hint={'right': 1.05}, on_press=self.integra))
         t.add_widget(Widget(size_hint=(None, 0.2)))
@@ -147,3 +165,6 @@ class TreeScreen(MDScreen):
         tree = Tree.parse(path)
         self.layout = TreeLayout(tree)
         self.add_widget(self.layout)
+        self.layout.add_widget(MDIconButton(icon='text', style='standard', pos_hint={'right': 1.08}, on_press=toggle_annex))
+        self.layout.add_widget(Widget(size_hint_y=None, height=10))
+        self.layout.add_widget(MDIconButton(icon='palette', style='standard', pos_hint={'right': 1.08}, on_press=toggle_colors))
