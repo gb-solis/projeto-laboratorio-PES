@@ -1,42 +1,72 @@
+from kivy.uix.widget import Widget
+
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.stacklayout import MDStackLayout
 from kivymd.uix.label import MDLabel
-from kivymd.uix.button import MDButton, MDButtonText
+from kivymd.uix.button import MDButton, MDButtonText, MDFabButton
+from kivymd.uix.dialog import MDDialog, MDDialogHeadlineText
 
 from tree import Tree
 
 fonts = {
     "copernicus": "fonts/CopernicusTrial-BookItalic.ttf",
     "georgia": "fonts/Georgia.ttf",
+    "antiqua": "C:/Windows/Fonts/AntQuaI.ttf",
+    "book": "C:/Windows/Fonts/BookOsI.ttf",
+    "bodoni": "C:/Windows/Fonts/Bod_I.ttf",
+    "bell": "C:/Windows/Fonts/BellI.ttf",
+    "californian": "C:/Windows/Fonts/CalifI.ttf",
+    "calisto": "C:/Windows/Fonts/CalistI.ttf",
+    "century": "C:/Windows/Fonts/SchlBkI.ttf",
+    "century": "C:/Windows/Fonts/SchlBkI.ttf", # *
+    "cooper": "C:/Windows/Fonts/CoopBl.ttf",
+    "garamond": "C:/Windows/Fonts/GaraIT.ttf",
+    "goudy": "C:/Windows/Fonts/GoudOsI.ttf", # *
+    "high tower": "C:/Windows/Fonts/HTowerTI.ttf",
+    "palatino": "C:/Windows/Fonts/PalaI.ttf", # *
+    "perpetua": "C:/Windows/Fonts/Peri____.ttf", # *
+    "times": "C:/Windows/Fonts/TimesI.ttf", # *
+    "minion": "C:/Users/Solis/Downloads/MinionPro-It.otf", # *
+    "minion rm": "C:/Users/Solis/Downloads/MinionPro-Regular.otf", # *
 }
 
 class TreeLayout(MDBoxLayout):
-    def __init__(self, tree, *args, **kwargs):
-        super().__init__(size_hint=(0.8, 0.8), pos_hint={"center_x": .5, "center_y": .5}, orientation='vertical')
+    def __init__(self, tree, *args, depth=1, **kwargs):
+        super().__init__(
+            size_hint=(0.8, 0.8),
+            pos_hint={"center_x": .5, "center_y": .5},
+            orientation='vertical',
+            )
 
         self.tree = tree
+        self.depth = depth
 
-        self.titulo = Título('Photosynthesis')
+        self.titulo = Título(tree.node)
         self.add_widget(self.titulo)
 
         self.stack = MDStackLayout(spacing=(0,10))
         self.add_widget(self.stack)
 
+        self.typeset()
+        
+    def typeset(self):
         for l in self.tree.leaves:
             match l:
                 case str():
-                    self.stack.add_widget(Palavra(l))
+                    for l in l.split():
+                        self.stack.add_widget(Palavra(l))
                 case Tree():
                     self.stack.add_widget(Link(l))
 
 class Título(MDLabel):
     def __init__(self, texto, *args, **kwargs):
         super().__init__(text=texto, *args, **kwargs)
+        self.pos_hint = {"center_x": 0.5, "center_y": .5}
         self.font_style = 'Body'
         self.halign = 'center'
         self.font_size = 60
-        self.font_name = fonts["copernicus"]
+        self.font_name = fonts["times"]
 
 class Palavra(MDLabel):
     def __init__(self, texto, *args, **kwargs):
@@ -48,30 +78,40 @@ class Palavra(MDLabel):
         self.color = (0,0,0)
         self.padding_x = 5
         self.font_size = 24
-        self.font_name = fonts["georgia"]
-        # self.md_bg_color = (1,0,0,0.1)
+        self.font_name = fonts["minion rm"]
+        self.md_bg_color = (1, 0, 0, 0.05)
         self.radius = 15, 15
 
 class Link(MDButton):
     def __init__(self, tree, *args, **kwargs):
-        texto = MDButtonText(text=tree.node)
+        texto = MDButtonText(text=tree.node, italic=True)
+        texto.font_name = fonts['minion']
+        texto.font_size = 24
         super().__init__(texto, *args, **kwargs)
         self.tree = tree
         self.texto = texto
         self.style = "elevated"
         self.pos_hint = {"center_x": 0, "center_y": .5}
         self.on_press = self.abre
+    
+    def integra(self, *args, **kwargs):
+        parent = self.parent
+        self.tree.expanded = True
+        parent.clear_widgets()
+        parent.parent.typeset()
+        self.dialog.dismiss()
 
     def abre(self):
-        i = self.parent.children.index(self)
-        for l in self.tree.leaves:
-            match l:
-                case str():
-                    for l2 in l.split():
-                        self.parent.add_widget(Palavra(l2), i)
-                case Tree():
-                    self.parent.add_widget(Link(l), i)
-        self.parent.remove_widget(self)
+        t = TreeLayout(self.tree, depth=self.parent.parent.depth+1,)
+        t.add_widget(MDFabButton(icon='pencil-outline', pos_hint={'center_x': 1.02}, on_press=self.integra))
+        t.add_widget(Widget(size_hint=(None, 0.2)))
+        d = MDDialog(
+            t,
+            orientation='vertical',
+            size_hint=[0.9**self.parent.parent.depth, 0.9**self.parent.parent.depth],
+        )
+        d.open()
+        self.dialog = d
 
 class TreeScreen(MDScreen):
     def __init__(self, path, **kwargs):
