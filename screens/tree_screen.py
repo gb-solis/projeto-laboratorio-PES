@@ -34,7 +34,7 @@ fonts = {
 class TreeLayout(MDBoxLayout):
     def __init__(self, tree, *args, depth=1, **kwargs):
         super().__init__(
-            size_hint=(0.8, 0.8),
+            size_hint=(0.8, 0.9),
             pos_hint={"center_x": .5, "center_y": .5},
             orientation='vertical',
             )
@@ -44,6 +44,7 @@ class TreeLayout(MDBoxLayout):
 
         self.titulo = Título(tree.node)
         self.add_widget(self.titulo)
+        self.add_widget(Widget(size_hint_y=None, height=20))
 
         self.stack = MDStackLayout(spacing=(0,10))
         self.add_widget(self.stack)
@@ -129,7 +130,7 @@ class Link(Fechável, MDButton):
 
     def abre(self):
         t = TreeLayout(self.tree, depth=self.parent.parent.depth+1,)
-        t.add_widget(MDFabButton(icon='pencil-outline', pos_hint={'center_x': 1.02}, on_press=self.integra))
+        t.add_widget(MDFabButton(icon='pencil-outline', pos_hint={'right': 1.05}, on_press=self.integra))
         t.add_widget(Widget(size_hint=(None, 0.2)))
         d = MDDialog(
             t,
