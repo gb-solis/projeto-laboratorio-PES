@@ -4,9 +4,8 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.stacklayout import MDStackLayout
 from kivymd.uix.label import MDLabel
-from kivymd.uix.button import MDButton, MDButtonText, MDFabButton
-from kivymd.uix.divider import MDDivider
-from kivymd.uix.dialog import MDDialog, MDDialogHeadlineText, MDDialogSupportingText, MDDialogContentContainer, MDDialogButtonContainer, MDDialogIcon
+from kivymd.uix.button import MDButton, MDButtonText, MDFabButton, MDIconButton
+from kivymd.uix.dialog import MDDialog
 
 from tree import Tree
 
@@ -78,19 +77,15 @@ class Fechável():
             return False
 
         if not touch.is_double_tap:
-            print("A")
             if hasattr(self, 'on_press'):
-                print("B")
                 self.on_press()
             return False
 
-        # if the touch collides with our widget, let's grab it
+        # Vamos pegar o toque, se colidir com nosso widget
         touch.grab(self)
-        print('okay')
-
         self.fecha()
 
-        # and accept the touch.
+        # E aceitar o clique
         return True
 
     def fecha(self):
