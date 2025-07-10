@@ -10,25 +10,27 @@ from kivymd.uix.dialog import MDDialog
 from tree import Tree
 
 fonts = {
-    "copernicus": "fonts/CopernicusTrial-BookItalic.ttf",
-    "georgia": "fonts/Georgia.ttf",
-    "antiqua": "C:/Windows/Fonts/AntQuaI.ttf",
-    "book": "C:/Windows/Fonts/BookOsI.ttf",
-    "bodoni": "C:/Windows/Fonts/Bod_I.ttf",
-    "bell": "C:/Windows/Fonts/BellI.ttf",
-    "californian": "C:/Windows/Fonts/CalifI.ttf",
-    "calisto": "C:/Windows/Fonts/CalistI.ttf",
-    "century": "C:/Windows/Fonts/SchlBkI.ttf",
-    "century": "C:/Windows/Fonts/SchlBkI.ttf", # *
-    "cooper": "C:/Windows/Fonts/CoopBl.ttf",
-    "garamond": "C:/Windows/Fonts/GaraIT.ttf",
-    "goudy": "C:/Windows/Fonts/GoudOsI.ttf", # *
-    "high tower": "C:/Windows/Fonts/HTowerTI.ttf",
-    "palatino": "C:/Windows/Fonts/PalaI.ttf", # *
-    "perpetua": "C:/Windows/Fonts/Peri____.ttf", # *
-    "times": "C:/Windows/Fonts/TimesI.ttf", # *
-    "minion": "C:/Users/Solis/Downloads/MinionPro-It.otf", # *
-    "minion rm": "C:/Users/Solis/Downloads/MinionPro-Regular.otf", # *
+    'italic' : {
+        "antiqua": "C:/Windows/Fonts/AntQuaI.ttf",
+        "book": "C:/Windows/Fonts/BookOsI.ttf",
+        "bodoni": "C:/Windows/Fonts/Bod_I.ttf",
+        "bell": "C:/Windows/Fonts/BellI.ttf",
+        "californian": "C:/Windows/Fonts/CalifI.ttf",
+        "calisto": "C:/Windows/Fonts/CalistI.ttf",
+        "century": "C:/Windows/Fonts/SchlBkI.ttf",
+        "century": "C:/Windows/Fonts/SchlBkI.ttf", # *
+        "cooper": "C:/Windows/Fonts/CoopBl.ttf",
+        "garamond": "C:/Windows/Fonts/GaraIT.ttf",
+        "goudy": "C:/Windows/Fonts/GoudOsI.ttf", # *
+        "high tower": "C:/Windows/Fonts/HTowerTI.ttf",
+        "palatino": "C:/Windows/Fonts/PalaI.ttf", # *
+        "perpetua": "C:/Windows/Fonts/Peri____.ttf", # *
+        "times": "C:/Windows/Fonts/TimesI.ttf", # *
+    },
+    'roman' : {
+        "georgia" : "C:/Windows/Fonts/Georgia.ttf",
+        "palatino": "C:/Windows/Fonts/Pala.ttf",
+    }
 }
 
 show_colors = False
@@ -84,7 +86,7 @@ class Título(MDLabel):
         self.font_style = 'Body'
         self.halign = 'center'
         self.font_size = 60
-        self.font_name = fonts["antiqua"]
+        self.font_name = fonts['italic']["antiqua"]
 
 class Fechável():
     def on_touch_down(self, touch):
@@ -119,14 +121,14 @@ class Palavra(Fechável, MDLabel):
         self.color = (0,0,0)
         self.padding_x = 5
         self.font_size = 24
-        self.font_name = fonts["minion rm"]
+        self.font_name = fonts['roman']["palatino"]
         self.md_bg_color = (1, 0, 0, 1 - 0.97**(1.0*self.level + 1)) if show_colors else (1, 0, 0, 0.03)
         self.radius = 15, 15
 
 class Link(Fechável, MDButton):
     def __init__(self, tree, pai, level, *args, **kwargs):
         texto = MDButtonText(text=tree.node, italic=True)
-        texto.font_name = fonts['minion']
+        texto.font_name = fonts['italic']['antiqua']
         texto.font_size = 24
         super().__init__(texto, *args, **kwargs)
         self.tree = tree
